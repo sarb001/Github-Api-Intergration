@@ -15,11 +15,30 @@ const octokit = new Octokit({
 
 const reponame = 'Flowpay';
 
+router.get('/rate_limit' , async(req,res) => {
+  
+  const Res  = await octokit.request('GET /rate_limit', {
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28'
+    }
+  });
+
+  console.log('Response -',Res);
+  return res.json({
+    message : "done"
+  })
+})
+
+
 router.get('/github' ,  async(req,res) => {
     try {
-       const Res =  await axios.get('https://api.github.com/users/sarb001');
-       const UserData = Res?.data;
-       console.log('DATa is -',UserData);
+            const Res =  await axios.get('https://api.github.com/users/sarb001', {
+                headers : {
+                    'Authorization' : `token ${process.env.GITHUB_ACCESS_TOKEN}`
+                }
+            });
+            const UserData = Res?.data;
+            console.log('DATa is -',UserData);
 
       const Username  = UserData?.name;
       const followers = UserData?.followers;
@@ -53,7 +72,8 @@ router.get(`/github/Flowpay` , async(req,res) => {
         repo: 'Flowpay',
         path: 'PATH',
         headers: {
-             'X-GitHub-Api-Version': '2022-11-28'
+             'X-GitHub-Api-Version': '2022-11-28',
+             'authorization' : `token ${process.env.GITHUB_ACCESS_TOKEN}`
         }
     });
 
@@ -88,9 +108,9 @@ router.post(`/github/${reponame}/issues` , async(req,res) => {
               'bug'
             ],
             headers: {
-            'accept' : 'application/json',
-            'X-GitHub-Api-Version': '2022-11-28'
-            }
+                'X-GitHub-Api-Version': '2022-11-28',
+                'authorization' : `token ${process.env.GITHUB_ACCESS_TOKEN}`
+           }
         });
         const MainIssueURL = AllIssues.data?.reactions.url;
 
