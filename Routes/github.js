@@ -99,6 +99,13 @@ router.post(`/github/${reponame}/issues` , async(req,res) => {
     try {
         const Response = await req.body;
 
+        if(!Response.title || !Response?.body){
+            return res.json({
+                success : false,
+                message : " Enter All Data "
+            })
+        }
+
         const AllIssues = await octokit.request('POST /repos/sarb001/Flowpay/issues', {
             owner: 'sarb001',
             repo: 'Flowpay',
