@@ -15,9 +15,8 @@ const octokit = new Octokit({
 
 const reponame = 'Flowpay';
 
-router.get('/' ,  async(req,res) => {
+router.get('/github' ,  async(req,res) => {
     try {
-
        const Res =  await axios.get('https://api.github.com/users/sarb001');
        const UserData = Res?.data;
        console.log('DATa is -',UserData);
@@ -79,7 +78,7 @@ router.get(`/github/Flowpay` , async(req,res) => {
 router.post(`/github/${reponame}/issues` , async(req,res) => {
     try {
         const Response = await req.body;
-        
+
         const AllIssues = await octokit.request('POST /repos/sarb001/Flowpay/issues', {
             owner: 'sarb001',
             repo: 'Flowpay',
@@ -102,7 +101,7 @@ router.post(`/github/${reponame}/issues` , async(req,res) => {
         })
 
     } catch (error) {
-        console.log('error -',error);
+        console.log('error issue -',error);
         return res.json({
            success : false,
            message : "Issue Creation Failed"    
