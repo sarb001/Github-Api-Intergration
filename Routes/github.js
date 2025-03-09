@@ -47,25 +47,23 @@ router.get('/' ,  async(req,res) => {
 })
 
 router.get(`/github/Flowpay` , async(req,res) => {
+
     try {
-  
     const MainRes = await octokit.request('GET /repos/sarb001/Flowpay/contents', {
         owner: 'sarb001',
         repo: 'Flowpay',
         path: 'PATH',
         headers: {
-        'X-GitHub-Api-Version': '2022-11-28'
+             'X-GitHub-Api-Version': '2022-11-28'
         }
     });
-    console.log('Main Respo-',MainRes);
 
     const FileName = MainRes?.data?.map(i => i?.name)
 
-    console.log('Main Res -',MainRes.data);
         return res.json({
             FileName,
             message : true,
-            message : " DONeee "
+            message : "All Files Fetched"
         })
 
     } catch (error) {
@@ -75,16 +73,18 @@ router.get(`/github/Flowpay` , async(req,res) => {
             message : "Unable to Get Repo Details"    
         })
     }
+
 })
 
 router.post(`/github/${reponame}/issues` , async(req,res) => {
     try {
-      
+        const Response = await req.body;
+        
         const AllIssues = await octokit.request('POST /repos/sarb001/Flowpay/issues', {
             owner: 'sarb001',
             repo: 'Flowpay',
-            title : "Trying First time",
-            body : "Body is here  ,Body is here , Body is here", 
+            title : Response?.title,
+            body : Response?.body, 
             labels: [
               'bug'
             ],
@@ -94,18 +94,18 @@ router.post(`/github/${reponame}/issues` , async(req,res) => {
             }
         });
         const MainIssueURL = AllIssues.data?.reactions.url;
-        console.log('Issue Created-',MainIssueURL);
 
         return res.json({
+            MainIssueURL,
             success : true,
-            message : "Created an Issue"    
+            message : " Issue Created "    
         })
 
     } catch (error) {
         console.log('error -',error);
         return res.json({
            success : false,
-           message : "Unable to Get Repo Issues"    
+           message : "Issue Creation Failed"    
        })
     }
 })
